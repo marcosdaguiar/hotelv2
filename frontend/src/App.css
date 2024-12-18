@@ -1,0 +1,465 @@
+h1{
+  font-size: xx-large;
+}
+ 
+ button {
+  height: 30px;
+  width: 120px;
+  color: white;
+  background-color: #114a8b;
+  box-shadow: 2px 2px 5px #929292;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+ button:hover {
+  height: 30px;
+  color: white;
+  background-color: #ff0000;
+  box-shadow: 2px 2px 5px #000000;
+  border-radius: 4px;
+}
+
+body {
+  background: rgb(255, 255, 255);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/*height: 100vh;
+/*using grid template*/
+.layout {
+  display: grid;
+  grid-template-areas: 
+      "side content content content"
+      "side content content content"
+      "side footer footer footer";
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(235px, 0px) auto auto auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+
+
+.side{
+  margin: 0px;
+  padding: 0%;
+  grid-area: side;
+  background-color: #0d3461;
+  color: #e6e6e6;
+  transition: all 500ms;
+  box-shadow: 2px 2px 5px #1b2f53;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+ 
+}
+
+
+.side h1{
+  display: flex;
+  font-size: xx-large;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.side hr{
+
+  margin-top: -16px;
+  width: 200px;
+  color: #acacac;
+  box-shadow: 0px 1px 3px #888888;
+  border-top: transparent;
+  border-left: transparent;
+  
+}
+.side > ul{ 
+  padding-top: 20px;
+  list-style: none;  
+}
+
+.side a{
+  display: block;
+  text-decoration: none;
+  color: #e6e6e6;
+  transition: all 200ms;
+  
+}
+
+
+.side a:hover{
+
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.side li {
+  margin-top: 20px;
+
+}
+
+.nav{
+  grid-area: nav;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: right;
+  margin-top: 20px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bbbbbb;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #225b75;
+}
+
+.nav button {
+  margin-left: 10px;
+  height: 30px;
+  width: 120px;
+  color: white;
+  background-color: #114a8b;
+  box-shadow: 2px 2px 5px #000000;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.nav button:hover {
+  margin-left: 10px;
+  height: 30px;
+  color: white;
+  background-color: #ff0000;
+  box-shadow: 2px 2px 5px #000000;
+  border-radius: 4px;
+}
+
+
+.row{
+  display: flex;
+  margin-left:0px;
+  margin-top: 10px;
+}
+
+.textarea{
+  width: 500px;
+  height: 500px;
+  align-items: center;
+  justify-content:flex;
+  box-sizing: border-box;
+  border: 1px solid gray;
+  background-color: #f8f8f8;
+  box-shadow: 2px 2px 5px #929292;
+}
+
+.search{
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.search input{
+  width: 300px;
+  height: 25px
+}
+
+
+.content {
+  margin-top: 0px;
+  margin-bottom: 40px;
+  margin-left: 40px;
+  margin-right: 40px;
+  padding: 0px;
+  background-color: rgb(255, 255, 255);
+  justify-content: left;
+}
+
+.header{
+  grid-area: header; 
+  justify-content: left;
+  align-items: Left;
+  text-align: Left;
+  display: block;
+  text-shadow: 1px 2px 5px #adadad;
+  color: #082457;
+  text-decoration: underline;
+  position: relative; 
+  padding-bottom: 0px;
+  margin: 0px;
+}
+
+.header hr{
+  margin-top: 16px;
+  width: 100%;
+  color: #000000;
+  box-shadow: 3px 1px 1px #082457;
+  border-top: #000000;
+  border-left: #082457;
+}
+.roomList {
+  border: 1px solid rgba(0, 0, 0, 0.137);
+
+}
+
+.roomList table {
+
+  background-color: #f7f8ff;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 1298px;
+  height: calc(100vh - 200px); /* Adjust this value based on your header/footer size */
+}
+
+.settings-container{
+  display: flex;
+}
+
+thead{
+  height: 40px;
+  border-bottom: px solid #000000;
+  background-color: #395c83;
+  color: #ffffff;
+}
+
+tbody {
+  display: block;
+  overflow-y: scroll;
+  height: calc(100vh - 350px); /* Slightly smaller than table to account for header */
+}
+
+tbody > tr:not(.expandedRow) {
+  height: 40px;
+  justify-content: center;
+  border-bottom: 2px solid #000000;  /* Make border more visible */
+  display: table-row;
+  width: 100%;
+}
+
+tr {
+  height: 40px;
+  justify-content: center;
+}
+
+/* Zebra striping for regular rows */
+tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+
+
+th, td{
+  margin-top: 10px;
+  text-align: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 30px;
+  display: inline-table;
+}
+
+
+
+
+
+input[type='checkbox'] {
+  width:15px;
+  height:15px;
+  background:white;
+  border-radius:5px;
+  border:2px solid #919191;
+}
+
+input[type='checkbox']:checked {
+  background: rgb(0, 0, 0);
+}
+
+input.case{
+  height: 20px;
+}
+
+#roomDetailButton{
+  margin: 0px;
+  color: #234fa7;
+  font-size: 11px;
+  
+}
+
+
+.expandedRow {
+  transition: opacity 0.5s ease;
+  height: 200px;
+  background-color: #c8daf0 !important;
+  margin: 10px;
+  min-width: 900;
+  justify-content: space-evenly;
+  border-top: 10px solid black !important;
+}
+.exTableNotes h3{
+  margin: 0px;
+  margin-bottom: 5px;
+}
+/*
+.exTableLabels {
+  height: auto;
+}
+
+.exTableFields{
+  height: auto;
+  width: 200px;
+}
+
+.exTableFields label{
+  margin-left: -9px;
+}
+
+.exTableFields input{
+  height: auto;
+  width: 150px;
+  padding-left: 5px;
+  margin: 5px;
+
+}
+*/
+
+.exTableLabels {
+  height: auto;
+  font-size: 14px;  /* Add consistent font size */
+}
+
+.exTableFields {
+  height: auto;
+  width: 200px;
+  font-size: 14px;  /* Match the labels font size */
+}
+
+.exTableFields label {
+  margin-left: -9px;
+  font-size: 14px;  /* Ensure labels inside fields match too */
+}
+
+.exTableFields input {
+  height: auto;
+  width: 150px;
+  padding-left: 5px;
+  margin: 5px;
+  font-size: 14px;  /* Match input text size */
+}
+.exTableNotes{
+  height: auto;
+  width: 480px;
+  padding-left: 50px;
+  vertical-align: top;
+}
+
+.roomNotes{
+  height: 100px;
+  width: 500px;
+  margin-bottom: 10px;
+  vertical-align: baseline;
+  resize: none;
+}
+
+.exTableButtons button{
+
+  align-items: end;
+  text-align: center;
+  justify-self: end;
+  height: 40px;
+  margin-left: 40px;
+  margin-top: 10px;
+
+
+}
+
+.column2 {
+  height: 100px;
+  width: 200px;
+  margin-top: 0px;
+  margin-left: 50px;
+}
+
+.addRoomBox{
+  background-color:#f7f8ff ;
+
+  width: 250px;
+  height: 500px;
+  border: 1px solid gray;
+  box-shadow: 2px 2px 5px #929292;
+}
+
+.addRoomContent{
+  margin: 10px;
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+
+}
+
+.addRoomContent label{
+  display: grid;
+  justify-content: center;
+  margin-bottom: 2px;
+  resize: none;
+}
+
+.addRoomContent input{
+  width: 200px;
+}
+
+.addRoomContent textarea{
+  width: 200px;
+  height: 80px;
+  resize: none;
+}
+
+.addRoomContent button{
+  margin-top: 10px;
+  height: 40px;
+}
+
+
+
+.footer {
+  grid-area: footer;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px;
+  color: antiquewhite;  
+  background-color: rgb(36, 36, 36);
+  border: transparent;
+  height: 20px;
+  z-index: 1000;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
