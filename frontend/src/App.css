@@ -216,7 +216,8 @@ body {
   border-left: #082457;
 }
 .roomList {
-  border: 1px solid rgba(0, 0, 0, 0.137);
+  border-collapse: collapse;
+
 
 }
 
@@ -317,7 +318,6 @@ input.case{
   margin: 10px;
   min-width: 900;
   justify-content: space-evenly;
-  border-top: 10px solid black !important;
 }
 .exTableNotes h3{
   margin: 0px;
@@ -408,7 +408,7 @@ input.case{
 
   width: 250px;
   height: 500px;
-  border: 1px solid gray;
+  border: 1px solid #e6e3e3;
   box-shadow: 2px 2px 5px #929292;
 }
 

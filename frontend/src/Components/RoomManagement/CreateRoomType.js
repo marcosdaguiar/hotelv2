@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../../Styles/RoomSearch.css';
 import '../../Styles/RoomSettings.css'
 
 export const CreateRoomType = () => {
@@ -43,9 +42,9 @@ export const CreateRoomType = () => {
 	};
 
 	return (
-		<div className="booking-step">
+		<div className="create-room-type">
 			<h2>Create Room Type</h2>
-			<form className="search-form" onSubmit={handleSubmit}>
+			<form className="create-room-type-form" onSubmit={handleSubmit}>
 				<div className="form-row">
 					<div className="form-group">
 						<label>Room Title</label>
@@ -64,7 +63,7 @@ export const CreateRoomType = () => {
 							name="description"
 							value={formData.description}
 							onChange={handleChange}
-							placeholder="Enter bed size"
+							placeholder="Enter room description"
 						/>
 					</div>
 					<div className="form-group">

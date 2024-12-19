@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 
 
@@ -12,16 +12,32 @@ export const RoomListExpand = (props) => {
     const setListOfRooms = props.setListOfRooms
     const allRooms = props.listOfRooms
 
-    const [roomNum, setRoomNum] = useState(value.roomNum);
-    const [roomType, setRoomType] = useState(value.roomName);
-    const [roomView, setRoomView] = useState(value.roomView);
-    const [roomStatus, setRoomStatus] = useState(value.roomStatus);
-    const [roomNotes, setRoomNotes] = useState(value.roomNotes);
+    const [roomNum, setRoomNum] = useState(value.room_number);
+    const [roomType, setRoomType] = useState(value.type_name);
+    const [roomView, setRoomView] = useState(value.room_view);
+    const [bedSize, setBedSize] = useState(value.bed_size);
+    const [bedCount, setBedCount] = useState(value.bed_qty);
+    const [roomPrice, setRoomPrice] = useState(value.room_base_price);
+    const [roomStatus, setRoomStatus] = useState(value.room_status);
+    const [roomNotes, setRoomNotes] = useState(value.room_notes);
+    const [roomTypes, setRoomTypes] = useState([]);
+
+    useEffect(() => {
+        const fetchRoomTypes = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/rooms/room_types`);
+                setRoomTypes(response.data);
+            } catch (error) {
+                console.error("Error fetching room types:", error);
+            }
+        };
+        fetchRoomTypes();
+    }, []);
 
     const deleteRoom = (roomId, index) =>{
         collapse(index);
 
-        axios.delete(process.env.REACT_APP_API_URL+'/rooms/'+ roomId).then(response =>{
+        axios.delete(process.env.REACT_APP_API_URL+'/rooms/'+ roomNum).then(response =>{
             console.log("room deleted");        
         })
         
@@ -31,24 +47,35 @@ export const RoomListExpand = (props) => {
         
     const save = (value,index)=>{
         collapse(index)
+        const selectedType = roomTypes.find(type => type.type_name === roomType);
         const newRoom = {
-            id: value.id,
-            room_id: roomNum,
-            room_type: roomType,
-            //room_bed_size: bedSize,
-           // room_bed_count: bedCount,
+            room_number: roomNum,
+            room_type_id: selectedType ? selectedType.id : null,
             room_view: roomView,
             room_status: roomStatus,
-            room_notes: roomNotes,
-           // room_price: roomPrice,
+            room_notes: roomNotes
         }
-        axios.put(process.env.REACT_APP_API_URL+'/rooms/update', newRoom);
-
-        console.log(newRoom)   
-
-        allRooms[index] = newRoom; 
-        setListOfRooms(allRooms);
+        
+        axios.put(`${process.env.REACT_APP_API_URL}/rooms/update`, newRoom)
+            .then(response => {
+                console.log("Room updated successfully:", response.data);
+                // Fetch updated room data to ensure we have all fields
+                axios.get(`${process.env.REACT_APP_API_URL}/rooms/rooms_details`)
+                    .then(response => {
+                        const updatedRoom = response.data.find(room => room.room_number === roomNum);
+                        if (updatedRoom) {
+                            const updatedRooms = [...allRooms];
+                            updatedRooms[index] = updatedRoom;
+                            setListOfRooms(updatedRooms);
+                        }
+                    });
+            })
+            .catch(error => {
+                console.error("Error updating room:", error);
+                alert('Failed to update room. Please try again.');
+            });
     }
+
 
     const refreshList = () =>{
         
@@ -59,14 +86,42 @@ export const RoomListExpand = (props) => {
            <td className='exTableLabels'>                               
                 <p>Room #:</p>
                 <p>Type:</p>
+                <p>Bed Type:</p>
+                <p>Bed Qty:</p>
                 <p>Room View:</p>
                 <p>Status:</p>
+                <p>Price:</p>
             </td>                                                                                     
             <td className= 'exTableFields' width="80px">
-                    <input type='text' id='room_id' name='room_id' onChange={e=>setRoomNum(e.target.value)} defaultValue={roomNum} readOnly ></input><br></br>
-                    <input type='text' id='room_type' name='room_type' onChange={e=>setRoomType(e.target.value)} defaultValue={roomType} ></input><br></br>
-                    <input type='text' id='room_view' name='room_view' onChange={e=>setRoomView(e.target.value)} defaultValue={roomView}></input> <br></br>
-                    <input type='text' id='room_status' name='room_status' onChange={e=>setRoomStatus(e.target.value)} defaultValue={roomStatus}></input><br></br>
+                    <input type='text' id='room_id' name='room_number' onChange={e=>setRoomNum(e.target.value)} defaultValue={roomNum} readOnly ></input><br></br>
+                    <select 
+                        id='room_type' 
+                        name='room_type' 
+                        value={roomType}
+                        onChange={(e) => {
+                            setRoomType(e.target.value);
+                            const selectedType = roomTypes.find(type => type.type_name === e.target.value);
+                            console.log('Selected type:', selectedType);
+                            console.log('Room types:', roomTypes);
+                            if (selectedType) {
+                                setBedSize(selectedType.bed_size);
+                                setBedCount(selectedType.bed_qty);
+                                setRoomPrice(selectedType.base_price);
+                            }
+                        }}>
+                        <option value="">Select a room type</option>
+                        {roomTypes.map((type, index) => (
+                            <option key={index} value={type.type_name}>
+                                {type.type_name}
+                            </option>
+                        ))}
+                    </select><br></br>
+                    <input type='text' id='bed_size' name='bed_size' value={bedSize} disabled={true}></input><br></br>
+                    <input type='text' id='bed_qty' name='bed_qty' value={bedCount} disabled={true}></input><br></br>
+                    <input type='text' id='room_view' name='room_view' onChange={e=>setRoomView(e.target.value)} value={roomView}></input> <br></br>
+                    <input type='text' id='room_status' name='room_status' onChange={e=>setRoomStatus(e.target.value)} value={roomStatus}></input><br></br>
+                    <input type='text' id='room_base_price' name='room_base_price' value={roomPrice} disabled={true}></input><br></br>
+
             </td>
             <td className='exTableNotes'>       
                     <h3><u>Notes</u></h3>
@@ -74,7 +129,7 @@ export const RoomListExpand = (props) => {
             </td>
             <td className='exTableButtons'>
                     <button onClick={(e) =>save(value,index)}>Save</button><br></br>
-                    <button onClick={() =>deleteRoom(value.room_id, index)}>Delete</button><br></br>
+                    <button onClick={() =>deleteRoom(value.room_number, index)}>Delete</button><br></br>
             </td>           
         </tr>  
   )

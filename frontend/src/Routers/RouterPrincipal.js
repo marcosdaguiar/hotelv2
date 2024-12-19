@@ -11,6 +11,7 @@ import { Inbox } from '../Pages/Inbox';
 import { RoomManagement } from '../Pages/RoomManagement';
 import { Booking } from '../Pages/Booking';
 import { RoomSettings } from '../Pages/RoomSettings';
+import '../Styles/RouterPrincipal.css'
 
 export const RouterPrincipal = () => {
   const [isRoomMenuOpen, setIsRoomMenuOpen] = useState(false);
@@ -23,10 +24,10 @@ export const RouterPrincipal = () => {
         
         <hr></hr>
         <h1>User</h1>
-        <ul>
-          <li><NavLink to="/Booking">Booking</NavLink></li>
-          <li><NavLink to="/Occupancy">Occupancy</NavLink></li>
-          <li><NavLink to="/Guests">Guests</NavLink></li>
+        <ul className='menu'>
+            <li><NavLink to="/Booking" className={({ isActive }) => isActive ? 'active' : ''}>Booking</NavLink></li>
+            <li><NavLink to="/Occupancy" className={({ isActive }) => isActive ? 'active' : ''}>Occupancy</NavLink></li>
+            <li><NavLink to="/Guests" className={({ isActive }) => isActive ? 'active' : ''}>Guests</NavLink></li>
           <li>
             <div 
               onClick={() => setIsRoomMenuOpen(!isRoomMenuOpen)} 
@@ -40,16 +41,16 @@ export const RouterPrincipal = () => {
             </div>
             {isRoomMenuOpen && (
               <ul>
-                <li><NavLink to="/RoomManagement/general">General View</NavLink></li>
-                <li><NavLink to="/RoomManagement/settings">Room Settings</NavLink></li>
+                <li><NavLink to="/RoomManagement/general" className={({ isActive }) => isActive ? 'active' : ''}>General View</NavLink></li>
+                <li><NavLink to="/RoomManagement/settings" className={({ isActive }) => isActive ? 'active' : ''}>Room Settings</NavLink></li>
               </ul>
             )}
           </li>
-          <li><NavLink to="/StaffManagement">Staff Management</NavLink></li>
-          <li><NavLink to="/Reports">Reports</NavLink></li>
-          <li><NavLink to="/Settings">Settings</NavLink></li>
-          <li><NavLink to="/Inbox">Inbox</NavLink></li>
-          <li><NavLink to="/Logout">Log out</NavLink></li>
+            <li><NavLink to="/StaffManagement" className={({ isActive }) => isActive ? 'active' : ''}>Staff Management</NavLink></li>
+            <li><NavLink to="/Reports" className={({ isActive }) => isActive ? 'active' : ''}>Reports</NavLink></li>
+            <li><NavLink to="/Settings" className={({ isActive }) => isActive ? 'active' : ''}>Settings</NavLink></li>
+            <li><NavLink to="/Inbox" className={({ isActive }) => isActive ? 'active' : ''}>Inbox</NavLink></li>
+            <li><NavLink to="/Logout" className={({ isActive }) => isActive ? 'active' : ''}>Log out</NavLink></li>
         </ul>
       </nav>
 

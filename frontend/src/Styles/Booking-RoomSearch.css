@@ -21,22 +21,7 @@
 }
 
 
-.form-row {
-	display: flex;
-	gap: 20px;
-	margin-bottom: 20px;
-}
 
-.form-group {
-	flex: 1;
-}
-
-.form-group label {
-	display: block;
-	margin-bottom: 8px;
-	font-weight: 500;
-	color: #495057;
-}
 
 .form-group input {
 	width: 100%;
@@ -69,22 +54,7 @@
 }
 
 
-.roomConfigList {
-	width: 860px;
-	border-collapse: collapse;
-	font-size: 0.9em;
-	margin-right: 100px;
-}
 
-.roomConfigList th,
-.roomConfigList td {
-	padding: 8px;
-	text-align: left;	
-}
-
-.roomConfigList th {
-	font-weight: 600;
-}
 
 
 .selected button{

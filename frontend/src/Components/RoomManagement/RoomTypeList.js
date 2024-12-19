@@ -28,6 +28,7 @@ export const RoomTypeList = ({listOfRooms, setListOfRooms}) => {
 	
 	return (
 		<div>
+			<h2>Room Types</h2>
 				<div className='table-wrap' >                
 					<table className='roomConfigList'>
 						<thead>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../../Styles/RoomSearch.css';
+import '../../Styles/Booking-RoomSearch.css';
 
 export const RoomSearch = ({ 
   listOfRooms, 
