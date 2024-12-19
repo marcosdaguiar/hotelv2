@@ -65,9 +65,9 @@ export const RoomGeneralList = ({listOfRooms, setListOfRooms}) => {
                             <td width="140px">{value?.room_view}</td>
                             <td width="140px">{value?.room_status}</td>
                             <td width="100px">
-                                <input type='checkbox' id= "checkbox1" checked={notesValidator(value?.roomNotes)} readOnly></input>
+                                <input type='checkbox' id= "checkbox1" checked={notesValidator(value?.room_notes)} readOnly></input>
                             </td>
-                            <td width="80px">${value?.price}</td>
+                            <td width="80px">${value?.room_base_price}</td>
                             <td>                         
                                 <h3 id='roomDetailButton' onClick={() => toggleRow(index)}>
                                     {expandedRows.includes(index) ? '[ ̶̶̶  ]' : '[+]'}</h3>

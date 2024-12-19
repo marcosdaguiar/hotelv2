@@ -21,7 +21,7 @@ export const RoomManagement = () => {
   return (
     <div>
       <header className = "header">
-        <h1>Room Management</h1>
+        <h1>Rooms</h1>
         <hr></hr>
       </header>
       <div className="row">

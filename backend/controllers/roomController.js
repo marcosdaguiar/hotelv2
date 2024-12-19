@@ -47,11 +47,33 @@ const roomController = {
 
 	deleteRoom: async (req, res) => {
 		try {
-			const room_id = req.params.room_id;
-			await rooms.destroy({
-				where: { room_id: room_id }
+			const roomId = req.params.room_id;
+			console.log("Request params:", req.params);
+			console.log("Received room_id:", roomId);
+			
+			if (!roomId) {
+				console.error("Room ID is undefined");
+				return res.status(400).json({ error: "Room ID is required" });
+			}
+
+			// Parse room ID to ensure it's a number
+			const parsedRoomId = parseInt(roomId);
+			if (isNaN(parsedRoomId)) {
+				console.error("Invalid room ID format");
+				return res.status(400).json({ error: "Invalid room ID format" });
+			}
+
+			console.log("Attempting to delete room ID:", parsedRoomId);
+			
+			const result = await rooms.destroy({
+				where: { room_number: parsedRoomId }
 			});
-			res.json("DELETED SUCCESSFULLY");
+
+			if (result === 0) {
+				return res.status(404).json({ error: "Room not found" });
+			}
+			
+			res.json({ message: "DELETED SUCCESSFULLY", deletedRoomId: parsedRoomId });
 		} catch (error) {
 			console.error("Error deleting room:", error);
 			res.status(500).json({ error: "Failed to delete room" });
@@ -62,7 +84,7 @@ const roomController = {
 		try {
 			const roomsUpdate = req.body;
 			await rooms.update(roomsUpdate, {
-				where: { room_id: roomsUpdate.room_id }
+				where: { room_number: roomsUpdate.room_number }
 			});
 			res.json(roomsUpdate);
 		} catch (error) {
