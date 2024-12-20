@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { RoomListExpand } from './RoomListExpand';
-
+import '../../Styles/Rooms.css';
 
 
 export const RoomGeneralList = ({listOfRooms, setListOfRooms}) => {
@@ -41,7 +41,7 @@ export const RoomGeneralList = ({listOfRooms, setListOfRooms}) => {
   return (
     <div className='table-wrap'>                
         <h3>Current Rooms</h3>
-        <table className='roomList'>
+        <table className='rooms-table'>
             <thead>
                 <tr>              
                     <th width="100px">Room #</th>

@@ -23,13 +23,7 @@
 
 
 
-.form-group input {
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #ced4da;
-	border-radius: 4px;
-	font-size: 14px;
-}
+
 
 .search-button {
 	background-color: #007bff;
@@ -101,22 +95,15 @@
 	border-radius: 4px;
 }
 
-.settings-container {
-		display: flex;
-		flex-direction: row;
-		gap: 30px;
-}
+
 
 .settings-container .booking-step {
 		padding: 0;
 }
 
-.settings-container h2 {
-		margin-bottom: 20px;
-		color: #333;
-}
 
-.edit-button, .delete-button {
+
+.edit-button {
     margin: 0 5px;
     padding: 5px 10px;
     border: none;
@@ -129,15 +116,8 @@
     color: #000;
 }
 
-.delete-button {
-    background-color: #dc3545;
-    color: #fff;
-}
 
 .edit-button:hover {
     background-color: #e0a800;
 }
 
-.delete-button:hover {
-    background-color: #c82333;
-}
