@@ -2,7 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik'
-
+import '../../Styles/Rooms.css';
 
 
 export const RoomListExpand = (props) => {
@@ -20,18 +20,18 @@ export const RoomListExpand = (props) => {
     const [roomPrice, setRoomPrice] = useState(value.room_base_price);
     const [roomStatus, setRoomStatus] = useState(value.room_status);
     const [roomNotes, setRoomNotes] = useState(value.room_notes);
-    const [roomTypes, setRoomTypes] = useState([]);
+    const [roomNums, setroomNums] = useState([]);
 
     useEffect(() => {
-        const fetchRoomTypes = async () => {
+        const fetchroomNums = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/rooms/room_types`);
-                setRoomTypes(response.data);
+                setroomNums(response.data);
             } catch (error) {
                 console.error("Error fetching room types:", error);
             }
         };
-        fetchRoomTypes();
+        fetchroomNums();
     }, []);
 
     const deleteRoom = (roomId, index) =>{
@@ -47,7 +47,7 @@ export const RoomListExpand = (props) => {
         
     const save = (value,index)=>{
         collapse(index)
-        const selectedType = roomTypes.find(type => type.type_name === roomType);
+        const selectedType = roomNums.find(type => type.type_name === roomNum);
         const newRoom = {
             room_number: roomNum,
             room_type_id: selectedType ? selectedType.id : null,
@@ -97,12 +97,12 @@ export const RoomListExpand = (props) => {
                     <select 
                         id='room_type' 
                         name='room_type' 
-                        value={roomType}
+                        value={roomNum}
                         onChange={(e) => {
-                            setRoomType(e.target.value);
-                            const selectedType = roomTypes.find(type => type.type_name === e.target.value);
+                            setRoomNum(e.target.value);
+                            const selectedType = roomNums.find(type => type.type_name === e.target.value);
                             console.log('Selected type:', selectedType);
-                            console.log('Room types:', roomTypes);
+                            console.log('Room types:', roomNums);
                             if (selectedType) {
                                 setBedSize(selectedType.bed_size);
                                 setBedCount(selectedType.bed_qty);
@@ -110,7 +110,7 @@ export const RoomListExpand = (props) => {
                             }
                         }}>
                         <option value="">Select a room type</option>
-                        {roomTypes.map((type, index) => (
+                        {roomNums.map((type, index) => (
                             <option key={index} value={type.type_name}>
                                 {type.type_name}
                             </option>
@@ -128,9 +128,9 @@ export const RoomListExpand = (props) => {
                     <textarea type='text' className='roomNotes' id='room_notes' name='room_notes' onChange={e=>setRoomNotes(e.target.value)} defaultValue={roomNotes} />
             </td>
             <td className='exTableButtons'>
-                    <button onClick={(e) =>save(value,index)}>Save</button><br></br>
-                    <button onClick={() =>deleteRoom(value.room_number, index)}>Delete</button><br></br>
-            </td>           
+                <button className = 'save-button' onClick={(e) =>save(value,index)}>Save</button><br></br>
+                <button className = 'delete-button'onClick={() =>deleteRoom(value.room_number, index)}>Delete</button><br></br>        
+            </td>
         </tr>  
   )
 }

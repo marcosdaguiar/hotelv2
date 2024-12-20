@@ -8,9 +8,9 @@ import { Settings } from '../Pages/Settings'
 import { StaffManagement } from '../Pages/StaffManagement';
 import { Error404 } from '../Pages/Error404';
 import { Inbox } from '../Pages/Inbox';
-import { RoomManagement } from '../Pages/RoomManagement';
+import { Rooms } from '../Pages/Rooms';
 import { Booking } from '../Pages/Booking';
-import { RoomSettings } from '../Pages/RoomSettings';
+import { RoomTypes } from '../Pages/RoomTypes';
 import '../Styles/RouterPrincipal.css'
 
 export const RouterPrincipal = () => {
@@ -41,8 +41,8 @@ export const RouterPrincipal = () => {
             </div>
             {isRoomMenuOpen && (
               <ul>
-                <li><NavLink to="/RoomManagement/general" className={({ isActive }) => isActive ? 'active' : ''}>General View</NavLink></li>
-                <li><NavLink to="/RoomManagement/settings" className={({ isActive }) => isActive ? 'active' : ''}>Room Settings</NavLink></li>
+                <li><NavLink to="/RoomManagement/rooms" className={({ isActive }) => isActive ? 'active' : ''}>Rooms</NavLink></li>
+                <li><NavLink to="/RoomManagement/types" className={({ isActive }) => isActive ? 'active' : ''}>Room Types</NavLink></li>
               </ul>
             )}
           </li>
@@ -57,8 +57,8 @@ export const RouterPrincipal = () => {
       <section className='content'>
         <Routes>
             <Route path = "/Booking" element = {<Booking/>} />
-            <Route path = "/RoomManagement/general" element = {<RoomManagement/>} />
-            <Route path = "/RoomManagement/settings" element = {<RoomSettings/>} />
+            <Route path = "/RoomManagement/rooms" element = {<Rooms/>} />
+            <Route path = "/RoomManagement/types" element = {<RoomTypes/>} />
             <Route path = "/Guests" element = {<Guests/>} />
             <Route path = "/Inbox" element = {<Inbox/>} />
             <Route path = "/Logout" element = {<Logout/>} />

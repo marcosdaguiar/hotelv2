@@ -3,9 +3,9 @@ import { CreateRoomType } from '../Components/RoomManagement/CreateRoomType';
 import { useState, useEffect } from 'react';
 import axios from "axios"
 import { RoomTypeList } from '../Components/RoomManagement/RoomTypeList';
-import '../Styles/RoomSettings.css'
+import '../Styles/RoomTypes.css'
 
-export const RoomSettings = () => {
+export const RoomTypes = () => {
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL

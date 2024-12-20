@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../../Styles/RoomSettings.css'
+import '../../Styles/RoomTypes.css'
 
 export const CreateRoomType = () => {
 	const [formData, setFormData] = useState({
@@ -43,7 +43,7 @@ export const CreateRoomType = () => {
 
 	return (
 		<div className="create-room-type">
-			<h2>Create Room Type</h2>
+			<h3>Create Room Type</h3>
 			<form className="create-room-type-form" onSubmit={handleSubmit}>
 				<div className="form-row">
 					<div className="form-group">
@@ -58,7 +58,7 @@ export const CreateRoomType = () => {
 					</div>
 					<div className="form-group">
 						<label>Description</label>
-						<input
+						<textarea
 							type="text"
 							name="description"
 							value={formData.description}
@@ -76,8 +76,6 @@ export const CreateRoomType = () => {
 							placeholder="Enter bed size"
 						/>
 					</div>
-				</div>
-				<div className="form-row">
 					<div className="form-group">
 						<label>Bed Quantity</label>
 						<input
@@ -112,10 +110,11 @@ export const CreateRoomType = () => {
 							step="0.01"
 						/>
 					</div>
-				</div>
-				<button type="submit" className="next-button">
+					<button type="submit" className="form-button">
 					Create Room Type
 				</button>
+				</div>
+				
 			</form>
 		</div>
 	);

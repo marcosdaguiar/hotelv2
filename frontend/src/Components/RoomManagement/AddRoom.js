@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from "axios"
 import {Formik, Form, Field, ErrorMessage} from 'formik'
 import * as Yup from 'yup'
-
+import '../../Styles/Rooms.css';
 
 export const AddRoom = ({setListOfRooms}) => {
     const [roomTypes, setRoomTypes] = useState([]);
@@ -128,7 +128,7 @@ export const AddRoom = ({setListOfRooms}) => {
                                 id= 'room_bed_count'
                                 name= 'room_bed_count'
                                 disabled={true}
-                                autoComplete='off' />  
+                                autoComplete='off'/>  
                      
                     <label>Bed Size: </label>
                         <Field  type='text'

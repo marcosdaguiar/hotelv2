@@ -1,8 +1,16 @@
 const { rooms, room_types, RoomDetails } = require('../models');
 const { Sequelize } = require('sequelize');
 
+const capitalizeWords = (str) => {
+	if (!str) return str;
+	return str.split(' ')
+		.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join(' ');
+};
+
 const roomController = {
 	getAllRooms: async (req, res) => {
+
 		try {
 			console.log("getting from roomController")
 			const listOfRooms = await rooms.findAll();
@@ -26,7 +34,13 @@ const roomController = {
 	createRoomType: async (req, res) => {
 		try {
 			const roomType = req.body;
-			const createdRoomType = await room_types.create(roomType);
+			const formattedRoomType = {
+				...roomType,
+				type_name: capitalizeWords(roomType.type_name),
+				bed_size: capitalizeWords(roomType.bed_size),
+				description: capitalizeWords(roomType.description)
+			};
+			const createdRoomType = await room_types.create(formattedRoomType);
 			res.json(createdRoomType);
 		} catch (error) {
 			console.error("Error creating room type:", error);
@@ -90,6 +104,56 @@ const roomController = {
 		} catch (error) {
 			console.error("Error updating room:", error);
 			res.status(500).json({ error: "Failed to update room" });
+		}
+	},
+
+	updateRoomType: async (req, res) => {
+		try {
+			const roomType = req.body;
+			console.log("Updating room type with data:", roomType);
+			
+			const result = await room_types.update({
+				type_name: capitalizeWords(roomType.type_name),
+				bed_size: capitalizeWords(roomType.bed_size),
+				bed_qty: parseInt(roomType.bed_qty),
+				base_price: parseFloat(roomType.base_price),
+				max_capacity: parseInt(roomType.max_capacity),
+				description: capitalizeWords(roomType.description)
+			}, {
+				where: { id: roomType.id }
+			});
+
+			
+			if (result[0] === 0) {
+				return res.status(404).json({ error: "Room type not found" });
+			}
+			
+			res.json({ message: "Room type updated successfully", data: roomType });
+		} catch (error) {
+			console.error("Error updating room type:", error);
+			res.status(500).json({ error: "Failed to update room type", details: error.message });
+		}
+	},
+
+	deleteRoomType: async (req, res) => {
+		try {
+			const id = req.params.id;
+			console.log("Request params:", req.params);
+			console.log("Received type_id:", id);
+			console.log("Attempting to delete room type:", req.params.type_name );
+			
+			const result = await room_types.destroy({
+				where: { id: id }
+			});
+
+			if (result === 0) {
+				return res.status(404).json({ error: "Room type not found" });
+			}
+			
+			res.json({ message: "DELETED SUCCESSFULLY" });
+		} catch (error) {
+			console.error("Error deleting room type:", error);
+			res.status(500).json({ error: "Failed to delete room type" });
 		}
 	},
 
