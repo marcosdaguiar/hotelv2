@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import '../../Styles/Booking-RoomSearch.css';
 
 export const RoomSearch = ({ 
-  listOfRooms, 
-  setListOfRooms, 
   onNext, 
   selectedRoom, 
   setSelectedRoom,
@@ -11,29 +10,12 @@ export const RoomSearch = ({
   setBookingData 
 }) => {
   const [filteredRooms, setFilteredRooms] = useState([]);
-  const [hasSearched, setHasSearched] = useState(false);  // Add hasSearched state
-
-  // Group rooms by type and find minimum price
-  useEffect(() => {
-    const groupedRooms = listOfRooms.reduce((acc, room) => {
-      if (!acc[room.room_type]) {
-        acc[room.room_type] = {
-          ...room,
-          room_price: Math.min(room.room_price)
-        };
-      } else {
-        acc[room.room_type].room_price = Math.min(acc[room.room_type].room_price, room.room_price);
-      }
-      return acc;
-    }, {});
-
-    setFilteredRooms(Object.values(groupedRooms));
-  }, [listOfRooms]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleRoomSelect = (e, room) => {
     e.preventDefault();
     e.stopPropagation();
-    if (selectedRoom?.room_type === room.room_type) {
+    if (selectedRoom?.type_name === room.type_name) {
       setSelectedRoom(null);
     } else {
       setSelectedRoom(room);
@@ -48,41 +30,44 @@ export const RoomSearch = ({
     }));
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    setHasSearched(true);  // Set hasSearched to true
+    setHasSearched(true);
     
-    // Filter rooms based on bed count
-    let filtered = listOfRooms.filter(room => 
-      room.room_bed_count >= bookingData.guests
-    );
-
-    // Group by type and find minimum price
-    const groupedRooms = filtered.reduce((acc, room) => {
-      if (!acc[room.room_type]) {
-        acc[room.room_type] = {
-          ...room,
-          room_price: Math.min(room.room_price)
-        };
-      } else {
-        acc[room.room_type].room_price = Math.min(acc[room.room_type].room_price, room.room_price);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/rooms/room_types`);      
+      if (!response.ok) {
+        throw new Error('Failed to fetch room types');
       }
-      return acc;
-    }, {});
-
-    setFilteredRooms(Object.values(groupedRooms));
+      const roomTypes = await response.json();
+      console.log('Fetched room types:', roomTypes);
+      
+      // Filter rooms based on guest capacity
+      const filtered = roomTypes.filter(room => 
+        parseInt(room.max_capacity) >= parseInt(bookingData.guests)
+      );
+      console.log('Filtered rooms:', filtered);
+      
+      setFilteredRooms(filtered);
+    } catch (error) {
+      console.error('Error during search:', error);
+      setFilteredRooms([]);
+    }
   };
+
+
+
 
 
   return (
     <div className="booking-step">
       <form onSubmit={handleSearch} className="search-form">
         <div className="search-row">
-            <div className="search-group">
+          <div className="search-group">
             <label htmlFor="checkIn">Check-in</label>
             <input
-                type="date"
-                id="checkIn"
+              type="date"
+              id="checkIn"
               name="checkIn"
               value={bookingData.checkIn}
               onChange={handleInputChange}
@@ -94,8 +79,8 @@ export const RoomSearch = ({
           <div className="search-group">
             <label htmlFor="checkOut">Check-out</label>
             <input
-                type="date"
-                id="checkOut"
+              type="date"
+              id="checkOut"
               name="checkOut"
               value={bookingData.checkOut}
               onChange={handleInputChange}
@@ -106,20 +91,20 @@ export const RoomSearch = ({
 
           <div className="search-group">
             <label htmlFor="guests">Guests</label>
-            <input
-                type="number"
-                id="guests"
+            <select
+              id="guests"
               name="guests"
               value={bookingData.guests}
               onChange={handleInputChange}
-              min="1"
-              max="10"
               required
-            />
+            >
+              {[...Array(8)].map((_, index) => (
+                <option key={index + 1} value={index + 1}>
+                  {index + 1}
+                </option>
+              ))}
+            </select>
           </div>
-
-
-
 
           <button type="submit" className="search-button">
             Search
@@ -130,33 +115,34 @@ export const RoomSearch = ({
         <div className="room-cards">
         {filteredRooms.map((room) => (
           <div 
-          key={room.room_type}
-          className={`room-card ${selectedRoom?.room_type === room.room_type ? 'selected' : ''}`}
+          key={room.id}
+          className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''}`}
           >
           <div className="room-card-header">
-            <h3>{room.room_type} - {room.room_bed_size}</h3>
-            <span className="room-price">From ${room.room_price}/night</span>
+            <h3>{room.type_name}</h3>
+            <span className="room-price">From ${room.base_price}/night</span>
           </div>
           <div className="room-card-content">
+            <p className="room-description">{room.description}</p>
             <div className="room-features">
             <div className="feature">
-              <span className="feature-label">Beds:</span>
-              <span className="feature-value">{room.room_bed_count}</span>
+              <span className="feature-label">Bed Size:</span>
+              <span className="feature-value">{room.bed_size}</span>
             </div>
             <div className="feature">
-              <span className="feature-label">View:</span>
-              <span className="feature-value">{room.room_view}</span>
+              <span className="feature-label">Bed Quantity:</span>
+              <span className="feature-value">{room.bed_qty}</span>
             </div>
             <div className="feature">
-              <span className="feature-label">Available:</span>
-              <span className="feature-value">{room.available_rooms} rooms</span>
+              <span className="feature-label">Max Capacity:</span>
+              <span className="feature-value">{room.max_capacity}</span>
             </div>
             </div>
             <button 
-            className={`select-button ${selectedRoom?.room_type === room.room_type ? 'selected' : ''}`}
+            className={`select-button ${selectedRoom?.id === room.id ? 'selected' : ''}`}
             onClick={(e) => handleRoomSelect(e, room)}
             >
-            {selectedRoom?.room_type === room.room_type ? 'Selected' : 'Select Room'}
+            {selectedRoom?.id === room.id ? 'Selected' : 'Select Room'}
             </button>
           </div>
           </div>
@@ -165,7 +151,7 @@ export const RoomSearch = ({
 
       {hasSearched && filteredRooms.length === 0 && (
         <div className="no-rooms-message">
-          No rooms available with {bookingData.beds} bed(s). Please try different search parameters.
+          No rooms available for {bookingData.guests} guests. Please try different search parameters.
         </div>
       )}
 
@@ -179,4 +165,3 @@ export const RoomSearch = ({
     </div>
   );
 };
-

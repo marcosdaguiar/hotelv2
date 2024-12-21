@@ -12,5 +12,5 @@ router.get("/room_types", roomController.getRoomType);
 router.post("/create_room_type", roomController.createRoomType)
 router.put("/update_room_type", roomController.updateRoomType)
 router.delete("/delete_room_type/:id", roomController.deleteRoomType)
-
+router.get("/available", roomController.availableRooms);
 module.exports = router;

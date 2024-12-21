@@ -45,5 +45,13 @@ module.exports = (sequelize, DataTypes) => {
         comment: 'Table to store reservation details.',
         }
     );
-    return Reservations
+
+    Reservations.associate = function(models) {
+        Reservations.belongsTo(models.rooms, {
+            foreignKey: 'room_id',
+            targetKey: 'id'
+        });
+    };
+
+    return Reservations;
 }
