@@ -20,13 +20,13 @@ export const RoomListExpand = (props) => {
     const [roomPrice, setRoomPrice] = useState(value.room_base_price);
     const [roomStatus, setRoomStatus] = useState(value.room_status);
     const [roomNotes, setRoomNotes] = useState(value.room_notes);
-    const [roomNums, setroomNums] = useState([]);
+    const [roomNums, setRoomNums] = useState([]);
 
     useEffect(() => {
         const fetchroomNums = async () => {
             try {
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/rooms/room_types`);
-                setroomNums(response.data);
+                setRoomNums(response.data);
             } catch (error) {
                 console.error("Error fetching room types:", error);
             }
@@ -47,14 +47,15 @@ export const RoomListExpand = (props) => {
         
     const save = (value,index)=>{
         collapse(index)
-        const selectedType = roomNums.find(type => type.type_name === roomNum);
+        const selectedType = roomNums.find(type => type.type_name === roomType);
         const newRoom = {
             room_number: roomNum,
             room_type_id: selectedType ? selectedType.id : null,
             room_view: roomView,
-            room_status: roomStatus,
+            status: roomStatus,
             room_notes: roomNotes
         }
+        console.log("Room updated successfully:", newRoom);
         
         axios.put(`${process.env.REACT_APP_API_URL}/rooms/update`, newRoom)
             .then(response => {
@@ -93,14 +94,14 @@ export const RoomListExpand = (props) => {
                 <p>Price:</p>
             </td>                                                                                     
             <td className= 'exTableFields' width="80px">
-                    <input type='text' id='room_id' name='room_number' onChange={e=>setRoomNum(e.target.value)} defaultValue={roomNum} readOnly ></input><br></br>
+                    <input type='text' id='room_id' name='room_number' onChange={e=>setRoomNum(e.target.value)} defaultValue={roomNum} ></input><br></br>
                     <select 
                         id='room_type' 
                         name='room_type' 
-                        value={roomNum}
+                        value={roomType}
                         onChange={(e) => {
-                            setRoomNum(e.target.value);
-                            const selectedType = roomNums.find(type => type.type_name === e.target.value);
+                            setRoomType(e.target.value);
+                            const selectedType = roomNums.find(type => type.room_number === e.target.value);
                             console.log('Selected type:', selectedType);
                             console.log('Room types:', roomNums);
                             if (selectedType) {
@@ -109,7 +110,7 @@ export const RoomListExpand = (props) => {
                                 setRoomPrice(selectedType.base_price);
                             }
                         }}>
-                        <option value="">Select a room type</option>
+                        
                         {roomNums.map((type, index) => (
                             <option key={index} value={type.type_name}>
                                 {type.type_name}
@@ -119,7 +120,18 @@ export const RoomListExpand = (props) => {
                     <input type='text' id='bed_size' name='bed_size' value={bedSize} disabled={true}></input><br></br>
                     <input type='text' id='bed_qty' name='bed_qty' value={bedCount} disabled={true}></input><br></br>
                     <input type='text' id='room_view' name='room_view' onChange={e=>setRoomView(e.target.value)} value={roomView}></input> <br></br>
-                    <input type='text' id='room_status' name='room_status' onChange={e=>setRoomStatus(e.target.value)} value={roomStatus}></input><br></br>
+                    <select 
+                        id='status' 
+                        name='status' 
+                        value={roomStatus}
+                        onChange={(e) => {
+                            console.log('Status changed to:', e.target.value); // Debug log
+                            setRoomStatus(e.target.value);
+                        }}
+                    >
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
                     <input type='text' id='room_base_price' name='room_base_price' value={roomPrice} disabled={true}></input><br></br>
 
             </td>

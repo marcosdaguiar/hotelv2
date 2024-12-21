@@ -1,5 +1,5 @@
-const { rooms, room_types, RoomDetails } = require('../models');
-const { Sequelize } = require('sequelize');
+const { rooms, room_types, RoomDetails, reservations } = require('../models');
+const { Sequelize, Op } = require('sequelize');
 
 const capitalizeWords = (str) => {
 	if (!str) return str;
@@ -23,7 +23,18 @@ const roomController = {
 
 	getRoomType: async (req, res) => {
 		try {
-			const roomTypes = await room_types.findAll();
+			const roomTypes = await room_types.findAll({
+				attributes: [
+					'id',
+					'type_name',
+					'base_price',
+					'max_capacity', 
+					'bed_size',
+					'bed_qty',
+					'description'
+				]
+			});
+			console.log('Room types found:', roomTypes.length); // Debug log
 			res.json(roomTypes);
 		} catch (error) {
 			console.error("Error fetching room types:", error);
@@ -51,7 +62,13 @@ const roomController = {
 	createRoom: async (req, res) => {
 		try {
 			const room = req.body;
-			const newRoom = await rooms.create(room);
+			const formattedRoom = {
+				...room,
+				room_view: capitalizeWords(room.room_view),
+				room_status: capitalizeWords(room.room_status),
+				room_notes: capitalizeWords(room.room_notes)
+			};
+			const newRoom = await rooms.create(formattedRoom);
 			res.json(newRoom);
 		} catch (error) {
 			console.error("Error creating room:", error);
@@ -97,10 +114,16 @@ const roomController = {
 	updateRoom: async (req, res) => {
 		try {
 			const roomsUpdate = req.body;
-			await rooms.update(roomsUpdate, {
+			const formattedRoom = {
+				...roomsUpdate,
+				room_view: capitalizeWords(roomsUpdate.room_view),
+				status: capitalizeWords(roomsUpdate.status),
+				room_notes: capitalizeWords(roomsUpdate.room_notes)
+			};
+			await rooms.update(formattedRoom, {
 				where: { room_number: roomsUpdate.room_number }
 			});
-			res.json(roomsUpdate);
+			res.json(formattedRoom);
 		} catch (error) {
 			console.error("Error updating room:", error);
 			res.status(500).json({ error: "Failed to update room" });
@@ -186,7 +209,48 @@ const roomController = {
 			console.error('Error querying the view:', error);
 			res.status(500).send('Server error');
 		}
-	}
+	},
+
+	availableRooms: async (req, res) => {
+        try {
+            const { checkIn, checkOut } = req.query;
+
+            if (!checkIn || !checkOut) {
+                return res.status(400).json({ error: 'Check-in and check-out dates are required' });
+            }
+
+            const availableRooms = await rooms.findAll({
+                attributes: ['id', 'room_number', 'status'],
+                include: [{
+                    model: room_types,
+                    attributes: ['type_name', 'base_price', 'max_capacity', 'bed_size', 'bed_qty', 'description'],
+                    required: true
+                }],
+                where: {
+                    [Op.and]: [
+                        { status: 'available' },
+                        Sequelize.literal(`
+                            rooms.id NOT IN (
+                                SELECT room_id 
+                                FROM reservations 
+                                WHERE (
+                                    check_in_date <= '${checkOut}' 
+                                    AND check_out_date >= '${checkIn}'
+                                )
+                            )
+                        `)
+                    ]
+                }
+            });
+
+            res.json(availableRooms);
+        } catch (error) {
+            console.error('Error fetching available rooms:', error);
+            res.status(500).json({ error: 'Failed to fetch available rooms' });
+        }
+    }
+
 };
+	
 
 module.exports = roomController;
