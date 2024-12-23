@@ -17,6 +17,14 @@ module.exports = (sequelize, DataTypes) => {
         status: {
             type: DataTypes.STRING,
             defaultValue: 'available'
+        },
+        room_view: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        room_notes: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     });
 

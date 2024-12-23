@@ -48,7 +48,11 @@ export const RoomTypeList = ({listOfRooms, setListOfRooms}) => {
 								<React.Fragment key={index}>
 									<tr>
 										<td width="200px">{value.type_name}</td>
-										<td width="420px">{value.description}</td>
+										<td width="420px">
+											{value.description.length > 100 
+												? `${value.description.substring(0, 100)}...` 
+												: value.description}
+										</td>
 										<td width="60px">{value.bed_qty}</td>
 										<td width="80px">{value.bed_size}</td>
 										<td width="120px">{value.max_capacity} Guests</td>

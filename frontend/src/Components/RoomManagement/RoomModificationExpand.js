@@ -105,7 +105,7 @@ export const RoomModificationExpand = (props) => {
   }
   
 return (
-      <tr className='expandedRow' >
+      <tr className='expanded-roomtype-list' >
          <td className='exTableLabels'>                               
               <p>Type:</p>
               <p>Bed Size:</p>
