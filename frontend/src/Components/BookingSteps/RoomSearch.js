@@ -55,10 +55,6 @@ export const RoomSearch = ({
     }
   };
 
-
-
-
-
   return (
     <div className="booking-step">
       <form onSubmit={handleSearch} className="search-form">
@@ -123,7 +119,6 @@ export const RoomSearch = ({
             <span className="room-price">From ${room.base_price}/night</span>
           </div>
           <div className="room-card-content">
-            <p className="room-description">{room.description}</p>
             <div className="room-features">
             <div className="feature">
               <span className="feature-label">Bed Size:</span>

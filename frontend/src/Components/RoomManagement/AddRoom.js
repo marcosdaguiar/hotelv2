@@ -75,9 +75,9 @@ export const AddRoom = ({setListOfRooms}) => {
         room_type: Yup.string().required("Room type is required"),
         room_bed_size: Yup.string().required("Bed size is required"),
         room_bed_count: Yup.number().required("Number of beds is required"),
-        room_view: Yup.string().required("Room view is required"),
+        room_view: Yup.string(),
         room_status: Yup.string().required("Status is required"),
-        room_notes: Yup.string().required("Notes are required"),
+        room_notes: Yup.string(),
         room_price: Yup.number().required("Price is required"),
     })
 
@@ -103,6 +103,7 @@ export const AddRoom = ({setListOfRooms}) => {
                                     {...field}
                                     id='room_type'
                                     autoComplete='off'
+
                                     onChange={(e) => {
                                         field.onChange(e);
                                         const selectedType = roomTypes.find(type => type.type_name === e.target.value);
@@ -112,7 +113,8 @@ export const AddRoom = ({setListOfRooms}) => {
                                             form.setFieldValue('room_price', selectedType.base_price);
                                         }
                                     }}>
-                                    <option value="">Select a room type</option>
+                                    <option value="" disabled selected>Select a room type</option>
+
                                     {roomTypes.map((type, index) => (
                                         <option key={index} value={type.type_name}>
                                             {type.type_name}

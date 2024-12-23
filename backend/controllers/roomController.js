@@ -114,16 +114,37 @@ const roomController = {
 	updateRoom: async (req, res) => {
 		try {
 			const roomsUpdate = req.body;
-			const formattedRoom = {
-				...roomsUpdate,
-				room_view: capitalizeWords(roomsUpdate.room_view),
-				status: capitalizeWords(roomsUpdate.status),
-				room_notes: capitalizeWords(roomsUpdate.room_notes)
-			};
-			await rooms.update(formattedRoom, {
+			console.log("Received update data:", roomsUpdate); // Debug log
+			
+			// Find the room first
+			const room = await rooms.findOne({
 				where: { room_number: roomsUpdate.room_number }
 			});
-			res.json(formattedRoom);
+
+			if (!room) {
+				return res.status(404).json({ error: "Room not found" });
+			}
+
+			// Prepare update data while preserving existing values
+			const formattedRoom = {
+				room_view: capitalizeWords(roomsUpdate.room_view),
+				status: capitalizeWords(roomsUpdate.status),
+				room_notes: capitalizeWords(roomsUpdate.room_notes),
+				room_type_id: roomsUpdate.room_type_id
+			};
+
+			console.log("Updating room with:", formattedRoom); // Debug log
+			
+			const result = await rooms.update(formattedRoom, {
+				where: { room_number: roomsUpdate.room_number }
+			});
+			
+			// Fetch the updated room to return the complete data
+			const updatedRoom = await rooms.findOne({
+				where: { room_number: roomsUpdate.room_number }
+			});
+			
+			res.json(updatedRoom);
 		} catch (error) {
 			console.error("Error updating room:", error);
 			res.status(500).json({ error: "Failed to update room" });

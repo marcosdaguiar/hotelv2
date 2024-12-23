@@ -286,7 +286,7 @@ tbody {
   height: calc(100vh - 350px); /* Slightly smaller than table to account for header */
 }
 
-tbody > tr:not(.expandedRow) {
+tbody > tr:not(.expanded-roomtype-list, .expanded-room-list) {
   height: 40px;
   justify-content: center;
   border-top: 2px solid #000000;  /* Make border more visible */
@@ -347,11 +347,13 @@ input.case{
 }
 
 
-.expandedRow {
+.expanded-room-list,
+.expanded-roomtype-list
+ {
   display: flex;
   transition: opacity 0.5s ease;
   height: 250px;
-  background-color: #c8daf0 !important;
+  
   min-width: 900;
   justify-content: space-evenly;
 }

@@ -79,7 +79,10 @@
 	background-color: #495057;
 }
 
-.expandedRow textarea{
+.expanded-roomtype-list{
+	background-color: #b8ebe4 !important;
+}
+.expanded-roomtype-list textarea{
 	width: 500px;
 	height: 100px
 }

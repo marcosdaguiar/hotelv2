@@ -34,7 +34,7 @@ export const RoomListExpand = (props) => {
         fetchroomNums();
     }, []);
 
-    const deleteRoom = (roomId, index) =>{
+    const deleteRoom = (roomNum, index) =>{
         collapse(index);
 
         axios.delete(process.env.REACT_APP_API_URL+'/rooms/'+ roomNum).then(response =>{
@@ -45,36 +45,43 @@ export const RoomListExpand = (props) => {
         setListOfRooms(allRooms.filter((_, i)=> i !== index))
         }
         
-    const save = (value,index)=>{
-        collapse(index)
-        const selectedType = roomNums.find(type => type.type_name === roomType);
-        const newRoom = {
-            room_number: roomNum,
-            room_type_id: selectedType ? selectedType.id : null,
-            room_view: roomView,
-            status: roomStatus,
-            room_notes: roomNotes
+    const save = async (value, index) => {
+        try {
+            collapse(index);
+            const selectedType = roomNums.find(type => type.type_name === roomType);
+            
+            // Create update data with all fields
+            const updateData = {
+                room_number: parseInt(roomNum),
+                room_type_id: selectedType ? selectedType.id : null,
+                room_view: roomView,
+                status: roomStatus,
+                room_notes: roomNotes
+            };
+            
+            console.log("Sending update data:", updateData);
+            
+            // Update the room
+            await axios.put(`${process.env.REACT_APP_API_URL}/rooms/update`, updateData);
+            
+            // Fetch the updated room details
+            const roomDetailsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/rooms/rooms_details`);
+            const updatedRoom = roomDetailsResponse.data.find(room => room.room_number === parseInt(roomNum));
+            
+            if (updatedRoom) {
+                // Update the local state with the new room data
+                const updatedRooms = allRooms.map(room => 
+                    room.room_number === parseInt(roomNum) ? updatedRoom : room
+                );
+                setListOfRooms(updatedRooms);
+                console.log("Room updated successfully:", updatedRoom);
+            } else {
+                throw new Error("Failed to find updated room");
+            }
+        } catch (error) {
+            console.error("Error updating room:", error);
+            alert('Failed to update room. Please try again.');
         }
-        console.log("Room updated successfully:", newRoom);
-        
-        axios.put(`${process.env.REACT_APP_API_URL}/rooms/update`, newRoom)
-            .then(response => {
-                console.log("Room updated successfully:", response.data);
-                // Fetch updated room data to ensure we have all fields
-                axios.get(`${process.env.REACT_APP_API_URL}/rooms/rooms_details`)
-                    .then(response => {
-                        const updatedRoom = response.data.find(room => room.room_number === roomNum);
-                        if (updatedRoom) {
-                            const updatedRooms = [...allRooms];
-                            updatedRooms[index] = updatedRoom;
-                            setListOfRooms(updatedRooms);
-                        }
-                    });
-            })
-            .catch(error => {
-                console.error("Error updating room:", error);
-                alert('Failed to update room. Please try again.');
-            });
     }
 
 
@@ -83,7 +90,7 @@ export const RoomListExpand = (props) => {
     }
     
   return (
-        <tr className='expandedRow' >
+        <tr className='expanded-room-list' >
            <td className='exTableLabels'>                               
                 <p>Room #:</p>
                 <p>Type:</p>
@@ -94,14 +101,16 @@ export const RoomListExpand = (props) => {
                 <p>Price:</p>
             </td>                                                                                     
             <td className= 'exTableFields' width="80px">
-                    <input type='text' id='room_id' name='room_number' onChange={e=>setRoomNum(e.target.value)} defaultValue={roomNum} ></input><br></br>
+                    <input type='text' id='room_id' name='room_number' onChange={e=>setRoomNum(e.target.value)} defaultValue={roomNum} disabled={true} ></input><br></br>
+                    
+                    {/* the room_type will also update the bed_type, bed_qty, and price*/}
                     <select 
                         id='room_type' 
                         name='room_type' 
                         value={roomType}
                         onChange={(e) => {
                             setRoomType(e.target.value);
-                            const selectedType = roomNums.find(type => type.room_number === e.target.value);
+                            const selectedType = roomNums.find(type => type.type_name === e.target.value);
                             console.log('Selected type:', selectedType);
                             console.log('Room types:', roomNums);
                             if (selectedType) {
@@ -119,13 +128,12 @@ export const RoomListExpand = (props) => {
                     </select><br></br>
                     <input type='text' id='bed_size' name='bed_size' value={bedSize} disabled={true}></input><br></br>
                     <input type='text' id='bed_qty' name='bed_qty' value={bedCount} disabled={true}></input><br></br>
-                    <input type='text' id='room_view' name='room_view' onChange={e=>setRoomView(e.target.value)} value={roomView}></input> <br></br>
+                    <input type='text' id='room_view' name='room_view' onChange={e=>setRoomView(e.target.value)} defaultValue={roomView}></input> <br></br>
                     <select 
                         id='status' 
                         name='status' 
                         value={roomStatus}
                         onChange={(e) => {
-                            console.log('Status changed to:', e.target.value); // Debug log
                             setRoomStatus(e.target.value);
                         }}
                     >
@@ -140,7 +148,7 @@ export const RoomListExpand = (props) => {
                     <textarea type='text' className='roomNotes' id='room_notes' name='room_notes' onChange={e=>setRoomNotes(e.target.value)} defaultValue={roomNotes} />
             </td>
             <td className='exTableButtons'>
-                <button className = 'save-button' onClick={(e) =>save(value,index)}>Save</button><br></br>
+                <button className = 'save-button' onClick={(e) =>save(value, index)}>Save</button><br></br>
                 <button className = 'delete-button'onClick={() =>deleteRoom(value.room_number, index)}>Delete</button><br></br>        
             </td>
         </tr>  
