@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 const roomRoutes = require('./routes/roomRoutes');
+const guestsRoutes = require('./routes/guestsRoutes');
 const db = require('./models');
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/v1/rooms', roomRoutes);
+app.use('/api/v1/guests', guestsRoutes); // Ensure this line is correct
 
 // Error handling
 app.use(errorHandler);
