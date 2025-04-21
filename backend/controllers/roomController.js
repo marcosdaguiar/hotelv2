@@ -224,7 +224,12 @@ const roomController = {
 
 	RoomDetails: async (req, res) => {
 		try {
-			const data = await RoomDetails.findAll();
+			const data = await RoomDetails.findAll({
+				order: [
+					['room_number', 'ASC']
+				]
+			});
+			
 			res.json(data); // Send the data as a JSON response
 		} catch (error) {
 			console.error('Error querying the view:', error);
